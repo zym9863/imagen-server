@@ -89,8 +89,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         }
       );
       const imageUrl = response.data.images[0].url.replace(/&amp;/g, '&');
-      
-      // 下载并保存图片
+    
       const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
       const tempDir = path.join(os.tmpdir(), 'imagen-cache');
       if (!fs.existsSync(tempDir)) {
