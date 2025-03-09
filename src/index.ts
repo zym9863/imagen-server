@@ -91,13 +91,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const imageUrl = response.data.images[0].url.replace(/&amp;/g, '&');
     
       const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-      const tempDir = path.join(os.tmpdir(), 'imagen-cache');
-      if (!fs.existsSync(tempDir)) {
-        fs.mkdirSync(tempDir, { recursive: true });
+      const outputDir = path.join(process.cwd(), 'generated-images');
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
       }
       
       const timestamp = Date.now();
-      const imagePath = path.join(tempDir, `generated_${timestamp}.png`);
+      const imagePath = path.join(outputDir, `generated_${timestamp}.png`);
       fs.writeFileSync(imagePath, imageResponse.data);
 
       return {
