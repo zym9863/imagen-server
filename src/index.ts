@@ -12,7 +12,7 @@ import * as os from 'os';
 
 interface GenerateImageArguments {
   prompt: string;
-  seed?: number;
+  image_size?: string;
 }
 
 const API_TOKEN = process.env.SILICONFLOW_API_TOKEN;
@@ -44,9 +44,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
             type: "string",
             description: "Prompt for image generation",
           },
-          seed: {
-            type: "number",
-            description: "Seed for random generation",
+          image_size: {
+            type: "string",
+            description: "Image size (720x1280, 1280x720, or 1024x1024)",
+            enum: ["720x1280", "1280x720", "1024x1024"]
           },
         },
         required: ["prompt"],
@@ -59,7 +60,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   if (request.params.name === "generate_image") {
     const args = request.params.arguments as Record<string, unknown> | undefined;
     const prompt = args?.prompt as string;
-    const seed = args?.seed as number | undefined;
+    const image_size = args?.image_size as string || "1024x1024";
 
     if (!prompt) {
       return {
@@ -77,9 +78,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const response = await axios.post(
         "https://api.siliconflow.cn/v1/images/generations",
         {
-          model: "black-forest-labs/FLUX.1-schnell",
+          model: "black-forest-labs/FLUX.1-dev",
           prompt: prompt,
-          seed: seed,
+          size: image_size,
         },
         {
           headers: {
@@ -89,15 +90,15 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         }
       );
       const imageUrl = response.data.images[0].url.replace(/&amp;/g, '&');
-    
+      
       const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-      const outputDir = path.join(process.cwd(), 'generated-images');
-      if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir, { recursive: true });
+      const tempDir = path.join(os.tmpdir(), 'imagen-cache');
+      if (!fs.existsSync(tempDir)) {
+        fs.mkdirSync(tempDir, { recursive: true });
       }
       
       const timestamp = Date.now();
-      const imagePath = path.join(outputDir, `generated_${timestamp}.png`);
+      const imagePath = path.join(tempDir, `generated_${timestamp}.png`);
       fs.writeFileSync(imagePath, imageResponse.data);
 
       return {

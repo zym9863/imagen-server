@@ -9,14 +9,14 @@ A TypeScript-based image generation MCP server using SiliconFlow API for image g
 ## Features
 
 - 🎨 Generate high-quality images using SiliconFlow API
-- 🔧 Support customizable generation parameters (prompts, random seeds, etc.)
+- 🔧 Support customizable generation parameters (prompts, image sizes)
 - 🚀 Perfect integration with Claude Desktop
 - 💻 Cross-platform support (Windows, MacOS)
 
 ## 功能特点
 
 - 🎨 使用 SiliconFlow API 生成高质量图像
-- 🔧 支持自定义生成参数（如提示词、随机种子等）
+- 🔧 支持自定义生成参数（如提示词、图像尺寸等）
 - 🚀 与 Claude Desktop 完美集成
 - 💻 跨平台支持 (Windows, MacOS)
 
@@ -121,7 +121,9 @@ The server provides the following tools:
 ### generate_image
 Generate and save images locally:
 - Required parameter: `prompt` (generation prompt)
-- Optional parameter: `seed` (random seed)
+- Optional parameter: `image_size` (image size, supports "720x1280", "1280x720", or "1024x1024", default is "1024x1024")
+
+Generated images are saved to the system temporary directory (`os.tmpdir()/imagen-cache/`).
 
 ## 使用方法
 
@@ -130,7 +132,9 @@ Generate and save images locally:
 ### generate_image
 生成图像并保存到本地：
 - 必需参数：`prompt`（生成提示词）
-- 可选参数：`seed`（随机种子）
+- 可选参数：`image_size`（图像尺寸，支持 "720x1280"、"1280x720" 或 "1024x1024"，默认为 "1024x1024"）
+
+生成的图像保存在系统临时目录（`os.tmpdir()/imagen-cache/`）中。
 
 ## Development
 
@@ -184,10 +188,10 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 
 ## Acknowledgments
 
-- [SiliconFlow API](https://siliconflow.cn) - Image generation service provider
+- [SiliconFlow API](https://siliconflow.cn) - Image generation service provider (using model: black-forest-labs/FLUX.1-dev)
 - [Model Context Protocol](https://github.com/modelcontextprotocol) - MCP SDK support
 
 ## 致谢
 
-- [SiliconFlow API](https://siliconflow.cn) - 提供图像生成服务
+- [SiliconFlow API](https://siliconflow.cn) - 提供图像生成服务（使用模型：black-forest-labs/FLUX.1-dev）
 - [Model Context Protocol](https://github.com/modelcontextprotocol) - MCP SDK 支持
